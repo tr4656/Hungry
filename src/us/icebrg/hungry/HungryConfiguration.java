@@ -93,6 +93,7 @@ public class HungryConfiguration {
 		this.foods.put("GOLDEN_APPLE", 100);
 		this.foods.put("RAW_FISH", 25);
 		this.foods.put("COOKED_FISH", 35);
+		this.foods.put("COOKIE", 35);
 
 		/**
 		 * @todo Fix cake. Disable because currently, it is infinite.
