@@ -1,0 +1,43 @@
+name: Hungry
+main: us.icebrg.hungry.Hungry
+version: 0.1
+author: jonathanyc
+description: >
+             Yet another hunger plugin for Bukkit.
+commands:
+    hungryreload:
+        description: Reloads Hungry configuration files.
+        usage: |
+            /<command>
+        permission: hungry.admin.reload
+    hungrysave:
+        description: Saves Hungry configuration to the disk.
+        usage: |
+            /<command>
+        permission: hungry.admin.save
+    hungrytoggle:
+        description: Toggles hungry from being disabled/enabled.
+        usage: |
+            /<command>
+        permission: hungry.admin.toggle
+    sethunger:
+        description: Manually sets a player's hunger.
+        usage: |
+            /<command> <playername> <hunger>
+        permission: hungry.admin.sethunger         
+    food:
+        description: Displays the amount of hunger a food item restores.
+        usage: |
+            /<command> <id>
+            /<command> <foodname>
+        permission: hungry.player.food
+    listfoods:
+        description: Lists the various edible foods and the amount of hunger each restores.
+        usage: |
+            /<command>
+        permission: hungry.player.food.list
+    hunger:
+        description: Displays the player's current hunger level.
+        usage: |
+            /<command>
+        permission: hungry.player.hunger.check

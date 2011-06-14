@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: pemben
+Build-Jdk: 1.5.0_22
+Specification-Title: Commons IO
+Specification-Version: 2.0.1
+Specification-Vendor: The Apache Software Foundation
+Implementation-Title: Commons IO
+Implementation-Version: 2.0.1
+Implementation-Vendor-Id: commons-io
+Implementation-Vendor: The Apache Software Foundation
+
