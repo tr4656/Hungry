@@ -52,7 +52,7 @@ public class HungryFoodCommand implements CommandExecutor {
 
 		if (config.foodBlocks.containsKey(foodName)) {
 			sender.sendMessage(ChatColor.GREEN + "[Hungry] " + foodName
-					+ " restores" + config.foodBlocks.get(foodName) + " hunger");
+					+ " restores " + config.foodBlocks.get(foodName) + " hunger");
 
 			return true;
 		}

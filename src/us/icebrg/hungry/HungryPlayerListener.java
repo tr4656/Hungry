@@ -53,7 +53,7 @@ public class HungryPlayerListener extends PlayerListener {
 					// ... if it is, act as if the player ate the item
 					this.plugin.handlePlayerEat(event.getPlayer(), event
 							.getPlayer().getItemInHand());
-
+					
 					return;
 				}
 			} catch (NullPointerException e) {
@@ -66,7 +66,7 @@ public class HungryPlayerListener extends PlayerListener {
 			Block block = event.getClickedBlock();
 
 			this.plugin.handlePlayerEat(event.getPlayer(), block);
-
+			
 			break;
 		}
 	}
@@ -77,8 +77,7 @@ public class HungryPlayerListener extends PlayerListener {
 		if (!this.plugin.getConfig().playerHungers.containsKey(event
 				.getPlayer().getName())) {
 			// if the player didn't exist, add them with the default hunger
-			// level (config.defaultHunger)
-			// to the playerHungers array.
+			// level (config.defaultHunger) to the playerHungers array.
 			this.plugin.getConfig().playerHungers.put(event.getPlayer()
 					.getName(), this.plugin.getConfig().defaultHunger);
 

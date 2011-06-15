@@ -81,23 +81,32 @@ public class HungryConfiguration {
 			"JUKEBOX", "LOCKED_CHEST", "TRAP_DOOR" };
 
 	public HungryConfiguration() {
-		this.playerHungers = new HashMap<String, Integer>();
+	}
+	
+	/**
+	 * Sets default sub-values for complex values.
+	 * We can't have this in the constructor, because then we'd mess up the Gson
+	 * object deserialization process. Instead, we specifically call this when
+	 * we are setting up an initial configuration file.
+	 */
+	public void setDefaults() {
 		this.foods = new HashMap<String, Integer>();
 		this.foodBlocks = new HashMap<String, Integer>();
-
+		this.playerHungers = new HashMap<String, Integer>();
+		
 		this.foods.put("APPLE", 100);
-		this.foods.put("MUSHROOM_SOUP", 75);
-		this.foods.put("BREAD", 25);
+		this.foods.put("MUSHROOM_SOUP", 25);
 		this.foods.put("PORK", 20);
 		this.foods.put("GRILLED_PORK", 35);
 		this.foods.put("GOLDEN_APPLE", 100);
 		this.foods.put("RAW_FISH", 25);
 		this.foods.put("COOKED_FISH", 35);
 		this.foods.put("COOKIE", 35);
+		
 
 		/**
 		 * @todo Fix cake. Disable because currently, it is infinite.
 		 */
-		// this.foodBlocks.put("CAKE_BLOCK", 15);
+		this.foodBlocks.put("CAKE_BLOCK", 15);
 	}
 }

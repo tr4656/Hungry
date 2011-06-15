@@ -71,6 +71,17 @@ public class Hungry extends JavaPlugin {
 			return false;
 		}
 
+		/* Apparently, this mess is not needed, but leave it in for future study
+		if (block.getType().name() == "CAKE_BLOCK") {
+			// Handle the Special Case of Cake (could be a book)
+			Material cakeMat = block.getType();
+			Cake cake = new Cake(cakeMat);
+			
+			cake.setSlicesEaten(cake.getSlicesEaten() + 1);
+			
+			block.setData(cake.getData());
+		}*/
+		
 		// Otherwise, if it's another block, just destroy it... (NOTE: To be
 		// implemented in the future.
 		// For now, the only supported block food is cake.)
@@ -165,8 +176,6 @@ public class Hungry extends JavaPlugin {
 
 		// Register events
 		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener,
-				Priority.Monitor, this);
-		pm.registerEvent(Event.Type.PLAYER_ANIMATION, this.playerListener,
 				Priority.Monitor, this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, this.playerListener,
 				Priority.Monitor, this);
@@ -310,7 +319,9 @@ public class Hungry extends JavaPlugin {
 
 			try {
 				this.config = new HungryConfiguration();
-
+				
+				this.config.setDefaults();
+				
 				try {
 					FileUtils.writeStringToFile(new File(Hungry.pluginDir
 							+ "config.json"), gson.toJson(this.config));
@@ -327,9 +338,7 @@ public class Hungry extends JavaPlugin {
 
 				return false;
 			}
-
-			this.log.info("[Hungry] Configuration file succesfully created!");
-
+			
 			return true;
 		}
 
@@ -358,6 +367,8 @@ public class Hungry extends JavaPlugin {
 			this.log.severe("[Hungry] Generating a new, default configuration file...");
 
 			this.config = new HungryConfiguration();
+			
+			this.config.setDefaults();
 
 			return false;
 		} catch (IOException e) {
@@ -365,9 +376,14 @@ public class Hungry extends JavaPlugin {
 
 			return false;
 		}
+		
 
+		this.log.info("[Hungry] Configuration file succesfully created!");
+		
 		this.log.info("[Hungry] Succesfully loaded configuration file!");
 
+		
+		
 		return true;
 	}
 }
