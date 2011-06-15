@@ -12,7 +12,7 @@ public class HungryConfiguration {
 	/**
 	 * The interval after which to check for and increment hunger, in seconds
 	 */
-	public Integer checkInterval = 60;
+	public Long checkInterval = 60L;
 
 	/**
 	 * The amount by which to increment hunger after every check

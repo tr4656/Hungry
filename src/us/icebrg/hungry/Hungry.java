@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
@@ -39,6 +40,10 @@ public class Hungry extends JavaPlugin {
 	protected volatile HungryConfiguration config;
 	protected HungryBlockListener blockListener;
 	protected HungryPlayerListener playerListener;
+	
+	protected Timer timer = new Timer();
+	
+	protected Gson gson;
 
 	public HungryConfiguration getConfig() {
 		return this.config;
@@ -147,10 +152,11 @@ public class Hungry extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		// Save configuration, if this.config is set
-		if (this.config != null) {
-			this.saveConfiguration();
-		}
+
+		// Cancel all HungryTimerTasks
+		this.timer.cancel();
+		
+		this.saveConfiguration();
 
 		this.log.info("[Hungry] Hungry disabled!");
 	}
@@ -161,6 +167,7 @@ public class Hungry extends JavaPlugin {
 		PluginManager pm = this.getServer().getPluginManager();
 		this.blockListener = new HungryBlockListener(this);
 		this.playerListener = new HungryPlayerListener(this);
+		this.gson = new GsonBuilder().setPrettyPrinting().create();
 
 		// Setup configuration, initializing if it isn't already there...
 		if (!this.setupConfiguration()) {
@@ -226,12 +233,18 @@ public class Hungry extends JavaPlugin {
 		// this.config.checkInterval seconds
 		// (multiply by 20 to get the number of ticks), starting immediately
 		// (0L)
-		this.getServer()
+		/*this.getServer()
 				.getScheduler()
 				.scheduleAsyncRepeatingTask(this,
 						new HungryRepeatingTask(this), 0L,
-						this.config.checkInterval * 20);
-
+						this.config.checkInterval * 20);*/
+		
+		this.timer.scheduleAtFixedRate(
+				new HungryTimerTask(this),
+				this.config.checkInterval * 1000, this.config.checkInterval * 1000);
+		// Multiply by 1000 because Timer accepts its arguments in milliseconds...
+		
+		
 		this.log.info("[Hungry] Hungry version " + pdfFile.getVersion()
 				+ " loaded!");
 	}
@@ -267,14 +280,12 @@ public class Hungry extends JavaPlugin {
 	 * @return true if success, false if failure
 	 */
 	public boolean saveConfiguration() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
 		try {
 			// Try to write the configuration from this.config...
 			this.log.info("[Hungry] Attempting to write configuration file to disk...");
 
 			FileUtils.writeStringToFile(new File(Hungry.pluginDir
-					+ "config.json"), gson.toJson(this.config), "utf-8");
+					+ "config.json"), this.gson.toJson(this.config), "utf-8");
 		} catch (IOException e) {
 			// If we failed to save, display a message but
 			// a) don't disable the plugin (this is called in onDisable)
@@ -296,7 +307,6 @@ public class Hungry extends JavaPlugin {
 	 * @return true if success, false if failure in any operation
 	 */
 	public boolean setupConfiguration() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		File pluginDirH = new File(Hungry.pluginDir);
 		File configFileH;
 
@@ -324,7 +334,7 @@ public class Hungry extends JavaPlugin {
 				
 				try {
 					FileUtils.writeStringToFile(new File(Hungry.pluginDir
-							+ "config.json"), gson.toJson(this.config));
+							+ "config.json"), this.gson.toJson(this.config));
 				} catch (JsonIOException e) {
 					this.log.severe("[Hungry] Failed to serialize configuration file!");
 
@@ -354,7 +364,7 @@ public class Hungry extends JavaPlugin {
 				throw new JsonSyntaxException("File is empty!");
 			}
 
-			this.config = gson.fromJson(jsonConfig, HungryConfiguration.class);
+			this.config = this.gson.fromJson(jsonConfig, HungryConfiguration.class);
 		} catch (JsonSyntaxException e) {
 			this.log.severe("[Hungry] Configuration file corrupt or invalid!");
 
