@@ -56,7 +56,7 @@ public class HungrySetHungerCommand implements CommandExecutor {
 		playerHungers.put(args[0], playerHunger);
 
 		sender.sendMessage(ChatColor.GREEN + "[Hungry] Set " + args[0]
-				+ "'s hunger to " + playerHunger.toString());
+				+ "'s hunger to " + playerHunger.toString() + "!");
 
 		return true;
 	}

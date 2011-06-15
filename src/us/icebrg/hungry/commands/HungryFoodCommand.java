@@ -61,7 +61,7 @@ public class HungryFoodCommand implements CommandExecutor {
 		// food or foodBlocks -
 		// inform the user
 		sender.sendMessage(ChatColor.RED
-				+ "[Hungry] No item or block with that name/id is edible.");
+				+ "[Hungry] The item with that name/id is not edible.");
 
 		return true;
 	}

@@ -48,7 +48,7 @@ public class HungryHungerCommand implements CommandExecutor {
 			playerHungers.put(player.getName(), 0);
 		}
 
-		player.sendMessage(ChatColor.GREEN + "[Hungry] Your current hunger is "
+		player.sendMessage(ChatColor.BLUE + "[Hungry] Your current hunger is "
 				+ playerHungers.get(player.getName()));
 
 		return true;
