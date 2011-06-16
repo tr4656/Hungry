@@ -1,6 +1,5 @@
 package us.icebrg.hungry.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import us.icebrg.hungry.Hungry;
 import us.icebrg.hungry.HungryConfiguration;
+import us.icebrg.hungry.HungryMessages;
 
 public class HungryFoodCommand implements CommandExecutor {
 
@@ -35,8 +35,7 @@ public class HungryFoodCommand implements CommandExecutor {
 		Material foodMat = Material.getMaterial(args[0]);
 
 		if (foodMat == null) {
-			sender.sendMessage(ChatColor.RED
-					+ "[Hungry] No item or block with that name/id could be found.");
+			sender.sendMessage(this.plugin.getConfig().getMessage(HungryMessages.ERR_NO_SUCH_FOOD));
 			return true;
 		}
 
@@ -44,15 +43,19 @@ public class HungryFoodCommand implements CommandExecutor {
 		String foodName = foodMat.name();
 
 		if (config.foods.containsKey(foodName)) {
-			sender.sendMessage(ChatColor.GREEN + "[Hungry] " + foodName
-					+ " restores " + config.foods.get(foodName) + " hunger");
+			sender.sendMessage(
+					this.plugin.getConfig().getMessage(
+							HungryMessages.VAR_FOOD_INFO,
+							foodName, config.foods.get(foodName).toString()));
 
 			return true;
 		}
 
 		if (config.foodBlocks.containsKey(foodName)) {
-			sender.sendMessage(ChatColor.GREEN + "[Hungry] " + foodName
-					+ " restores " + config.foodBlocks.get(foodName) + " hunger");
+			sender.sendMessage(
+					this.plugin.getConfig().getMessage(
+							HungryMessages.VAR_FOOD_INFO,
+							foodName, config.foodBlocks.get(foodName).toString()));
 
 			return true;
 		}
@@ -60,8 +63,7 @@ public class HungryFoodCommand implements CommandExecutor {
 		// if nothing has been returned so far, this food item was not in either
 		// food or foodBlocks -
 		// inform the user
-		sender.sendMessage(ChatColor.RED
-				+ "[Hungry] The item with that name/id is not edible.");
+		sender.sendMessage(this.plugin.getConfig().getMessage(HungryMessages.ERR_NO_SUCH_FOOD));
 
 		return true;
 	}

@@ -1,6 +1,6 @@
 name: Hungry
 main: us.icebrg.hungry.Hungry
-version: 0.1.2.3
+version: 0.2.1
 author: jonathanyc
 description: >
              Yet another hunger plugin for Bukkit.

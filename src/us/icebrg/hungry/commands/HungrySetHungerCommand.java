@@ -2,13 +2,13 @@ package us.icebrg.hungry.commands;
 
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import us.icebrg.hungry.Hungry;
+import us.icebrg.hungry.HungryMessages;
 
 public class HungrySetHungerCommand implements CommandExecutor {
 
@@ -44,8 +44,7 @@ public class HungrySetHungerCommand implements CommandExecutor {
 		try {
 			playerHunger = Integer.parseInt(args[1]);
 		} catch (NumberFormatException e) {
-			sender.sendMessage(ChatColor.RED
-					+ "[Hungry] Player hunger specified is of an invalid format!");
+			sender.sendMessage(this.plugin.getConfig().getMessage(HungryMessages.ERR_INVALID_HUNGER_FORMAT));
 
 			return true;
 		}
@@ -55,8 +54,9 @@ public class HungrySetHungerCommand implements CommandExecutor {
 		// above (the new player hunger)
 		playerHungers.put(args[0], playerHunger);
 
-		sender.sendMessage(ChatColor.GREEN + "[Hungry] Set " + args[0]
-				+ "'s hunger to " + playerHunger.toString() + "!");
+		sender.sendMessage(this.plugin.getConfig().getMessage(
+				HungryMessages.VAR_SETHUNGER,
+				args[0], args[1]));
 
 		return true;
 	}

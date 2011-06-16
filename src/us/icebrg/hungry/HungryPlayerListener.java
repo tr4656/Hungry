@@ -3,10 +3,8 @@ package us.icebrg.hungry;
 import java.util.logging.Logger;
 
 import org.bukkit.block.Block;
-import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class HungryPlayerListener extends PlayerListener {
@@ -18,15 +16,6 @@ public class HungryPlayerListener extends PlayerListener {
 		this.plugin = plugin;
 
 		this.log = plugin.log;
-	}
-
-	@Override
-	/**
-	 * For our purposes, if the player is eating.
-	 */
-	public void onPlayerAnimation(PlayerAnimationEvent event) {
-		this.plugin.handlePlayerEat(event.getPlayer(), event.getPlayer()
-				.getItemInHand());
 	}
 
 	@Override
@@ -68,21 +57,6 @@ public class HungryPlayerListener extends PlayerListener {
 			this.plugin.handlePlayerEat(event.getPlayer(), block);
 			
 			break;
-		}
-	}
-
-	@Override
-	public void onPlayerLogin(PlayerLoginEvent event) {
-		// Check if the player doesn't exist in the config.playerHungers value
-		if (!this.plugin.getConfig().playerHungers.containsKey(event
-				.getPlayer().getName())) {
-			// if the player didn't exist, add them with the default hunger
-			// level (config.defaultHunger) to the playerHungers array.
-			this.plugin.getConfig().playerHungers.put(event.getPlayer()
-					.getName(), this.plugin.getConfig().defaultHunger);
-
-			this.log.info("[Hungry] Added player "
-					+ event.getPlayer().getName() + " to players list.");
 		}
 	}
 

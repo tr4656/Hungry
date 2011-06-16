@@ -2,13 +2,13 @@ package us.icebrg.hungry.commands;
 
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import us.icebrg.hungry.Hungry;
+import us.icebrg.hungry.HungryMessages;
 
 public class HungryHungerCommand implements CommandExecutor {
 
@@ -26,8 +26,8 @@ public class HungryHungerCommand implements CommandExecutor {
 		if (!(sender instanceof Player)) {
 			// If they are not an in-game player (i.e. they are the console)
 			// inform them
-			sender.sendMessage(ChatColor.RED
-					+ "[Hungry] This command can only be used by in-game players.");
+			sender.sendMessage(this.plugin.getConfig().
+					getMessage(HungryMessages.ERR_ONLY_USABLE_INGAME));
 
 			return true;
 		}
@@ -48,8 +48,9 @@ public class HungryHungerCommand implements CommandExecutor {
 			playerHungers.put(player.getName(), 0);
 		}
 
-		player.sendMessage(ChatColor.BLUE + "[Hungry] Your current hunger is "
-				+ playerHungers.get(player.getName()));
+		player.sendMessage(this.plugin.getConfig().
+				getMessage(HungryMessages.VAR_CURRENT_HUNGER_IS,
+						playerHungers.get(player.getName()).toString()));
 
 		return true;
 	}

@@ -1,12 +1,12 @@
 package us.icebrg.hungry.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import us.icebrg.hungry.Hungry;
+import us.icebrg.hungry.HungryMessages;
 
 public class HungryReloadCommand implements CommandExecutor {
 
@@ -30,11 +30,11 @@ public class HungryReloadCommand implements CommandExecutor {
 			// If setupConfiguration() returned false, Hungry could not setup or
 			// load the configuration
 			// for some reason - inform the user
-			sender.sendMessage(ChatColor.RED
-					+ "[Hungry] Failed to reload configuration!");
+			sender.sendMessage(this.plugin.getConfig()
+					.getMessage(HungryMessages.ERR_RELOAD_FAILURE));
 		} else {
-			sender.sendMessage(ChatColor.GREEN
-					+ "[Hungry] Succesfully reloaded configuration.");
+			sender.sendMessage(this.plugin.getConfig()
+					.getMessage(HungryMessages.MSG_RELOAD_SUCCESS));
 		}
 
 		return true;

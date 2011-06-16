@@ -1,12 +1,11 @@
 package us.icebrg.hungry.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import us.icebrg.hungry.Hungry;
+import us.icebrg.hungry.*;
 
 public class HungrySaveCommand implements CommandExecutor {
 
@@ -27,11 +26,11 @@ public class HungrySaveCommand implements CommandExecutor {
 
 		if (!this.plugin.saveConfiguration()) {
 			// Failed to save configuration - inform the user
-			sender.sendMessage(ChatColor.RED
-					+ "[Hungry] Failed to save configuration!");
+			sender.sendMessage(this.plugin.getConfig()
+					.getMessage(HungryMessages.ERR_SAVECONFIG_FAILURE));
 		} else {
-			sender.sendMessage(ChatColor.GREEN
-					+ "[Hungry] Succesfully saved configuration.");
+			sender.sendMessage(this.plugin.getConfig()
+					.getMessage(HungryMessages.MSG_SAVECONFIG_SUCCESS));
 		}
 
 		return true;

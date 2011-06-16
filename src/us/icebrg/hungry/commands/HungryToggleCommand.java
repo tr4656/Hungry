@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import us.icebrg.hungry.Hungry;
 import us.icebrg.hungry.HungryConfiguration;
+import us.icebrg.hungry.HungryMessages;
 
 public class HungryToggleCommand implements CommandExecutor {
 
@@ -29,10 +30,13 @@ public class HungryToggleCommand implements CommandExecutor {
 		// Simply invert config.isEnabled
 		this.plugin.getConfig().isEnabled = (!this.plugin.getConfig().isEnabled);
 
-		String humanStatus = this.plugin.getConfig().isEnabled ? "enabled"
-				: "disabled";
-
-		sender.sendMessage("[Hungry] Hungry is now " + humanStatus);
+		if (this.plugin.getConfig().isEnabled) {
+			sender.sendMessage(this.plugin.getConfig().getMessage(
+					HungryMessages.MSG_TOGGLED_ENABLED));
+		} else {
+			sender.sendMessage(this.plugin.getConfig().getMessage(
+					HungryMessages.MSG_TOGGLED_DISABLED));			
+		}
 
 		return true;
 	}

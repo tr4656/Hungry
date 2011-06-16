@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -28,8 +27,7 @@ import us.icebrg.hungry.commands.HungryToggleCommand;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonParseException;
 
 public class Hungry extends JavaPlugin {
 
@@ -75,17 +73,6 @@ public class Hungry extends JavaPlugin {
 			// If not, pass the event and just return.
 			return false;
 		}
-
-		/* Apparently, this mess is not needed, but leave it in for future study
-		if (block.getType().name() == "CAKE_BLOCK") {
-			// Handle the Special Case of Cake (could be a book)
-			Material cakeMat = block.getType();
-			Cake cake = new Cake(cakeMat);
-			
-			cake.setSlicesEaten(cake.getSlicesEaten() + 1);
-			
-			block.setData(cake.getData());
-		}*/
 		
 		// Otherwise, if it's another block, just destroy it... (NOTE: To be
 		// implemented in the future.
@@ -182,8 +169,6 @@ public class Hungry extends JavaPlugin {
 		}
 
 		// Register events
-		pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener,
-				Priority.Monitor, this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, this.playerListener,
 				Priority.Monitor, this);
 		pm.registerEvent(Event.Type.PLAYER_RESPAWN, this.playerListener,
@@ -228,16 +213,6 @@ public class Hungry extends JavaPlugin {
 		}
 
 		this.log.info("[Hungry] Initializing hunger loop...");
-
-		// Schedule the hunger check & incrementing event to occur every
-		// this.config.checkInterval seconds
-		// (multiply by 20 to get the number of ticks), starting immediately
-		// (0L)
-		/*this.getServer()
-				.getScheduler()
-				.scheduleAsyncRepeatingTask(this,
-						new HungryRepeatingTask(this), 0L,
-						this.config.checkInterval * 20);*/
 		
 		this.timer.scheduleAtFixedRate(
 				new HungryTimerTask(this),
@@ -283,9 +258,8 @@ public class Hungry extends JavaPlugin {
 		try {
 			// Try to write the configuration from this.config...
 			this.log.info("[Hungry] Attempting to write configuration file to disk...");
-
-			FileUtils.writeStringToFile(new File(Hungry.pluginDir
-					+ "config.json"), this.gson.toJson(this.config), "utf-8");
+			
+			this.config.save(new File(Hungry.pluginDir + "config.json"));
 		} catch (IOException e) {
 			// If we failed to save, display a message but
 			// a) don't disable the plugin (this is called in onDisable)
@@ -327,28 +301,20 @@ public class Hungry extends JavaPlugin {
 		if (!configFileH.exists()) {
 			this.log.info("[Hungry] Configuration file doesn't exist! Creating...");
 
+			this.config = new HungryConfiguration();
+			
+			this.config.setDefaults();
+			
 			try {
-				this.config = new HungryConfiguration();
-				
-				this.config.setDefaults();
-				
-				try {
-					FileUtils.writeStringToFile(new File(Hungry.pluginDir
-							+ "config.json"), this.gson.toJson(this.config));
-				} catch (JsonIOException e) {
-					this.log.severe("[Hungry] Failed to serialize configuration file!");
-
-					return false;
-				}
-
-				this.log.info("[Hungry] Configuration file succesfully serialized...");
-
+				this.config.save(configFileH);
 			} catch (IOException e) {
-				this.log.severe("[Hungry] Failed to create configuration file!");
+				this.log.severe("[Hungry] Failed to serialize configuration file!");
 
 				return false;
 			}
-			
+
+			this.log.info("[Hungry] Configuration file succesfully serialized...");
+				
 			return true;
 		}
 
@@ -357,15 +323,8 @@ public class Hungry extends JavaPlugin {
 		this.log.info("[Hungry] Loading configuration file...");
 
 		try {
-			String jsonConfig = FileUtils.readFileToString(new File(
-					Hungry.pluginDir + "config.json"), "utf-8");
-
-			if (jsonConfig.length() == 0) {
-				throw new JsonSyntaxException("File is empty!");
-			}
-
-			this.config = this.gson.fromJson(jsonConfig, HungryConfiguration.class);
-		} catch (JsonSyntaxException e) {
+			this.config = HungryConfiguration.load(configFileH);
+		} catch (JsonParseException e) {
 			this.log.severe("[Hungry] Configuration file corrupt or invalid!");
 
 			this.log.severe("[Hungry] Moving old configuration file to config.json.bak...");
@@ -374,7 +333,7 @@ public class Hungry extends JavaPlugin {
 			(new File(Hungry.pluginDir + "config.json")).renameTo(new File(
 					Hungry.pluginDir + "config.json.bak"));
 
-			this.log.severe("[Hungry] Generating a new, default configuration file...");
+			this.log.severe("[Hungry] 'Loading' a new, default configuration file...");
 
 			this.config = new HungryConfiguration();
 			
@@ -387,12 +346,7 @@ public class Hungry extends JavaPlugin {
 			return false;
 		}
 		
-
-		this.log.info("[Hungry] Configuration file succesfully created!");
-		
 		this.log.info("[Hungry] Succesfully loaded configuration file!");
-
-		
 		
 		return true;
 	}
